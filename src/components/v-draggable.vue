@@ -1,18 +1,23 @@
 <template>
-  <div class="draggableWrap">
-
-      <div id="drag-top">
-        <draggable class="list-group clear" element="ul" v-model="list" :options="{group:{name:'people', pull:'clone', put:true },sort: false,ghostClass: 'ghost'}" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
+  <div class="draggableWrap clear">
+      <div id="drag-left">
+        <draggable class="list-group clear" element="ul" v-model="list" :options="{group:{name:'people', pull:'clone', put:true },sort: false,ghostClass: 'ghost',chosenClass:'chosenClass'}" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
             <transition-group type="transition" :name="'flip-list'">
-              <li class="list1-group-item" v-for="element in list" :key="element.id"> 
-                <chart :options="element.option" style="height:100px;width:100px"></chart>
+              <li class="list1-group-item clear" v-for="element in list" :key="element.id">
+                <div class="chartWrap">
+                    <chart :options="element.option" style="width:100%;height:100%"></chart>
+                </div> 
+                
+                <div class="chartTxt">
+                    {{element.title}}
+                </div>
               </li> 
             </transition-group>
         </draggable>
       </div>
 
       <div id="drag-main">
-          <draggable element="span" v-model="list2" :options="{group:{name:'people',pull:false}}" :move="onMove"> 
+          <draggable element="span" v-model="list2" :options="{group:{name:'people',pull:false},ghostClass: 'ghost1',chosenClass:'chosenClass'}" :move="onMove"  @start="isDragging=true" @end="isDragging=false"> 
               <transition-group name="no" class="list-group clear" tag="ul">
                 <li class="list2-group-item" v-for="element in list2" :key="element.id" :style="{height: element.height + 'px' }"> 
                   <chart :options="element.option" style="width:100%;height:100%"></chart>
@@ -181,7 +186,7 @@ export default {
         }
     ]
 };
-  let bar2={
+ let bar2={
     tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b}: {c} ({d}%)"
@@ -294,13 +299,13 @@ let category={
     ]
 };
 
+
     return {
       list:[
-      {'name':'vuejs','id':1,'height':200,'option':polar},
-      {'name':'html','id':3,'height':200,'option':bar},
-      {'name':'js','id':2,'height':200,'option':bar2},
-      {'name':'react','id':2,'height':200,'option':category},
-      {'name':'angularjs','id':2,'height':200,'option':bar2}
+      {'name':'vuejs','id':1,'height':200,'option':polar,'title':'南丁格尔图'},
+      {'name':'html','id':3,'height':200,'option':bar,'title':'柱状图'},
+      {'name':'js','id':2,'height':200,'option':bar2,'title':'柱状图'},
+      {'name':'react','id':2,'height':200,'option':category,'title':'折线图'}
       ],
       list2:[],
       editable:true,
@@ -338,29 +343,18 @@ let category={
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.draggableWrap{padding:30px;border:1px solid #ccc;background-color: #fff;min-height: 500px;}
-#drag-main{border:1px solid #333;min-height: 400px;margin-top:20px;padding:15px;}
-.flip-list-move {
-  transition: transform 0.5s;
-}
+.draggableWrap{min-height:200px;height: 800px;}
+#drag-left{float:left;width:220px;background-color: #324343;box-sizing: border-box;min-height:100%;padding:15px;}
+#drag-main{float:right;width:calc(100% - 220px);background:#edf0f5;min-height: 100%;box-sizing: border-box;padding:20px;}
+.flip-list-move {transition: transform 0.5s;}
+.no-move {transition: transform 0s;}
 
-.no-move {
-  transition: transform 0s;
-}
-
-.ghost {
-  opacity: .5;
-  background: #C8EBFB;
-}
-
-.list-group {
-  min-height: 20px;
-}
-
-.list1-group-item {list-style: none;border:1px solid #333;cursor: move;border-radius: 3px;float: left;width:100px;height:100px;margin:5px;}
-
-.list1-group-item i{
-  cursor: pointer;
-}
+.list-group {min-height: 20px;}
+.list1-group-item {list-style: none;cursor: move;border-radius: 3px;float: left;width:100%;box-sizing: border-box;background-color:#fff;margin-bottom:10px;}
+.chartWrap{width:100%;height:100%;height: 140px;}
+.chartTxt{height:30px;line-height: 30px;font-size: 12px;}
 .list2-group-item{list-style: none;border:1px solid #333;width:250px;height:250px;margin:10px;background-color: #fff;float: left}
+
+.ghost {opacity: .5;background: #C8EBFB;width:250px;margin:10px;height:200px;}
+.ghost1{opacity: .5;background: #C8EBFB;}
 </style>
