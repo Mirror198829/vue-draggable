@@ -1,13 +1,12 @@
 <template>
   <div class="draggableWrap clear">
       <div id="drag-left">
-        <draggable class="list-group clear" element="ul" v-model="list" :options="{group:{name:'people', pull:'clone', put:true },sort: false,ghostClass: 'ghost',chosenClass:'chosenClass'}" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
+        <draggable class="" element="ul" v-model="list" :options="{group:{name:'people', pull:'clone', put:false },sort: false,ghostClass: 'ghost',chosenClass:'chosenClass'}" :move="onMove" @start="isDragging=true" @end="isDragging=false"> 
             <transition-group type="transition" :name="'flip-list'">
               <li class="list1-group-item clear" v-for="element in list" :key="element.id">
                 <div class="chartWrap">
                     <chart :options="element.option" style="width:100%;height:100%"></chart>
-                </div> 
-                
+                </div>                
                 <div class="chartTxt">
                     {{element.title}}
                 </div>
@@ -18,8 +17,9 @@
 
       <div id="drag-main">
           <draggable element="span" v-model="list2" :options="{group:{name:'people',pull:false},ghostClass: 'ghost1',chosenClass:'chosenClass'}" :move="onMove"  @start="isDragging=true" @end="isDragging=false"> 
-              <transition-group name="no" class="list-group clear" tag="ul">
-                <li class="list2-group-item" v-for="element in list2" :key="element.id" :style="{height: element.height + 'px' }"> 
+              <transition-group name="list" class="list-group" tag="ul">
+                <li class="list2-group-item" v-for="(element,key) in list2" :key="key" :style="{height: element.height + 'px' }">
+                  <i class="fa fa-close close-icon" @click="detele(key)"></i> 
                   <chart :options="element.option" style="width:100%;height:100%"></chart>
                 </li> 
               </transition-group>
@@ -336,6 +336,12 @@ let category={
       const relatedElement = relatedContext.element;
       const draggedElement = draggedContext.element;
       return (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+    },
+    detele(key){
+        this.list2.splice(key,1)
+    },
+    onEnd(){
+        debugger
     }
   },
 }
@@ -345,16 +351,21 @@ let category={
 <style scoped>
 .draggableWrap{min-height:200px;height: 800px;}
 #drag-left{float:left;width:220px;background-color: #324343;box-sizing: border-box;min-height:100%;padding:15px;}
-#drag-main{float:right;width:calc(100% - 220px);background:#edf0f5;min-height: 100%;box-sizing: border-box;padding:20px;}
+#drag-main{float:right;width:calc(100% - 220px);background:#edf0f5;min-height: 100%;box-sizing: border-box;}
 .flip-list-move {transition: transform 0.5s;}
 .no-move {transition: transform 0s;}
 
-.list-group {min-height: 20px;}
+
 .list1-group-item {list-style: none;cursor: move;border-radius: 3px;float: left;width:100%;box-sizing: border-box;background-color:#fff;margin-bottom:10px;}
 .chartWrap{width:100%;height:100%;height: 140px;}
 .chartTxt{height:30px;line-height: 30px;font-size: 12px;}
-.list2-group-item{list-style: none;border:1px solid #333;width:250px;height:250px;margin:10px;background-color: #fff;float: left}
-
-.ghost {opacity: .5;background: #C8EBFB;width:250px;margin:10px;height:200px;}
+.list-group {min-height: 20px;display: flex;flex-wrap:wrap;justify-content:flex-start;}
+.list2-group-item{list-style: none;border:1px solid #333;width:250px;height:250px;margin:20px;background-color: #fff;/*float: left;*/position: relative;}
+.close-icon{position: absolute;right: 1px;top:1px;cursor: pointer;background-color: #fff;padding:3px;z-index: 10000;display: none}
+.list2-group-item:hover .close-icon{display: block;}
+.ghost {opacity: .5;background: #C8EBFB;width:200px;height:170px;margin:20px 0;}
 .ghost1{opacity: .5;background: #C8EBFB;}
+
+/*.list-enter-active, .list-leave-active {transition: all 1s;}
+.list-leave-to {transform: translateY(30px);}*/
 </style>

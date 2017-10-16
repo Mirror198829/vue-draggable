@@ -4,7 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
+
 import 'element-ui/lib/theme-default/index.css'
+import 'font-awesome/css/font-awesome.css'
+import 'animate.css/animate.css'
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
